@@ -1,0 +1,255 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(160deg, #5f2c82, #49a09d);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #1f2937;
+}
+
+
+.page {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ---------- CALCULATOR CARD ---------- */
+.card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* ---------- INPUTS ---------- */
+input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 16px;
+  outline: none;
+}
+input,
+select {
+  min-height: 48px;
+}
+
+input:focus {
+  border-color: #6a11cb;
+}
+
+/* ---------- TENURE GROUP ---------- */
+.tenure-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tenure-group input,
+.tenure-group select {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 15px;
+}
+
+.tenure-group select {
+  background: #ffffff;
+}
+
+/* ---------- BUTTON ---------- */
+button {
+  width: 100%;
+  padding: 16px;
+  min-height: 52px;          /* 👈 mobile tap size */
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: #ffffff;
+  border: none;
+  border-radius: 18px;       /* slightly rounder for phone UI */
+  font-size: 17px;           /* prevents zoom issues */
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+button:hover {
+  opacity: 0.95;
+}
+
+/* ---------- RESULT SECTION ---------- */
+.result {
+  margin-top: 24px;
+  background: #f9fafb;
+  padding: 18px;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+.result h3 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-size: 16px;
+}
+
+.result p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.result hr {
+  margin: 14px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ---------- EMI BADGE (INLINE HIGHLIGHT) ---------- */
+.emi-badge {
+  background: #ede9fe;
+  color: #4c1d95;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.emi-badge.interest {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+/* ---------- EXPLANATION SECTION ---------- */
+.emi-info {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.emi-info h3 {
+  text-align: center;
+  margin-bottom: 14px;
+  font-size: 18px;
+}
+
+.emi-info h4 {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.intro {
+  text-align: center;
+  color: #6b7280;
+}
+
+/* ---------- LIST ---------- */
+.emi-info ul {
+  padding-left: 18px;
+  margin: 8px 0;
+}
+
+.emi-info li {
+  margin-bottom: 6px;
+}
+
+/* ---------- FORMULA BOX ---------- */
+.formula-box {
+  background: #f3f4f6;
+  padding: 14px;
+  border-radius: 14px;
+  margin: 14px 0;
+}
+
+.formula-box code {
+  display: block;
+  margin-top: 6px;
+  font-weight: 600;
+  color: #4f46e5;
+}
+
+/* ---------- BULLET STYLE ---------- */
+.bullet {
+  color: #4f46e5;
+  font-weight: 900;
+  margin-right: 6px;
+}
+
+/* ---------- EXAMPLE BOX ---------- */
+.example-box {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 16px;
+  margin-top: 14px;
+}
+
+.example-box code {
+  font-weight: 600;
+  color: #065f46;
+}
+
+/* ---------- NOTE ---------- */
+.note {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 600px) {
+  .page {
+    padding: 24px 12px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  body {
+    background: linear-gradient(180deg, #5f2c82, #49a09d);
+  }
+
+  .page {
+    padding: 16px 12px 28px;
+    gap: 24px;
+  }
+
+  .card {
+    border-radius: 20px;
+    padding: 20px;
+  }
+
+  .emi-info {
+    border-radius: 20px;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  button {
+    position: static;
+  }
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bank Loan Calculator</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+
+  <!-- MAIN PAGE WRAPPER -->
+  <div class="page">
+
+    <!-- CALCULATOR CARD -->
+    <div class="card">
+      <h2>Loan Repayment Calculator</h2>
+
+      <input type="number" id="loan" placeholder="Loan Amount">
+      <input type="number" id="rate" placeholder="Interest Rate (%)">
+
+      <div class="tenure-group">
+        <input type="number" id="tenureValue" placeholder="Tenure">
+        <select id="tenureType">
+          <option value="months">Months</option>
+          <option value="years">Years</option>
+        </select>
+      </div>
+
+      <button onclick="calculate()">CALCULATE</button>
+
+      <div class="result">
+        <h3>RESULTS</h3>
+
+        <p>
+          Principal-only EMIs:
+          <b id="pCount"></b> ×
+          <span class="emi-badge">₹<b id="pEmi"></b></span>
+        </p>
+
+        <p>
+          Interest-only EMIs:
+          <b id="iCount"></b> ×
+          <span class="emi-badge interest">₹<b id="iEmi"></b></span>
+        </p>
+
+        <hr>
+
+        <p>Total Interest: ₹<b id="totalInterest"></b></p>
+        <p>Total Repayment: ₹<b id="totalPay"></b></p>
+      </div>
+    </div>
+
+    <!-- EXPLANATION SECTION (AFTER CALCULATOR) -->
+    <div class="emi-info">
+      <h3>How EMI Is Calculated</h3>
+
+      <p class="intro">
+        This loan calculator uses a structured repayment method where the loan
+        amount and interest are calculated separately to give clear visibility
+        of repayment.
+      </p>
+
+      <h4>Key Terms</h4>
+      <ul>
+        <li><b>P</b> – Principal loan amount</li>
+        <li><b>N</b> – Total loan tenure (in months)</li>
+        <li><b>R</b> – Monthly interest rate</li>
+      </ul>
+
+      <div class="formula-box">
+        <p>Monthly Interest Rate Formula:</p>
+        <code>R = Annual Interest Rate ÷ 12 ÷ 100</code>
+      </div>
+
+      <h4>Repayment Structure</h4>
+
+      <p>
+        <span class="bullet">•</span>
+        <b>Principal-only EMIs:</b>
+        The principal amount is divided equally over the selected number of months.
+      </p>
+
+      <p>
+        <span class="bullet">•</span>
+        <b>Interest-only EMIs:</b>
+        Interest is calculated monthly on the original loan amount and remains fixed.
+      </p>
+
+      <div class="example-box">
+        <h4>Example</h4>
+
+        <p>
+          Loan Amount = <b>₹10,00,000</b><br>
+          Annual Interest Rate = <b>7.2%</b><br>
+          Tenure = <b>120 months</b>
+        </p>
+
+        <p>
+          Monthly Interest Rate:<br>
+          <code>7.2 ÷ 12 ÷ 100 = 0.006</code>
+        </p>
+
+        <p>
+          Monthly Interest = <b>₹6,000</b><br>
+          Total Interest = <b>₹1,80,000</b><br>
+          Total Repayment = <b>₹11,80,000</b>
+        </p>
+      </div>
+
+      <p class="note">
+        This calculator helps avoid manual calculations and provides a clear
+        breakup of principal and interest for easy understanding.
+      </p>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
