@@ -38,7 +38,7 @@ This tool helps staff quickly calculate loan repayment details with a clear brea
 4. Click **Calculate**
 5. View a clear breakup of repayment details
 
-The calculator follows a structured repayment logic where principal and interest are calculated separately for better clarity.
+The calculator follows a structured repayment logic where principal and interest are calculated separately for better clarity
 
 ---
 
