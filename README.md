@@ -62,7 +62,7 @@ Actual loan repayment values may vary based on bank policies and loan terms.
 
 ---
 
-## 🔹 Author
+## 🔹 Developer
 
 **Partha**
 
