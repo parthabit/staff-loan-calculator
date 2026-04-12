@@ -20,6 +20,7 @@ function calculate() {
   let principalMonths = Math.floor(months * 0.75);
   let interestMonths = months - principalMonths;
 
+  
   let principalEMI = loan / principalMonths;
   let monthlyInterest = (loan * rate) / 12 / 100;
 
