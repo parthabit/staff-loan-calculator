@@ -8,9 +8,6 @@ function calculate() {
     alert("Please enter all values");
     return;
   }
-
-
-  
   // Convert tenure to months
   let months = tenureType === "years"
     ? tenureValue * 12
