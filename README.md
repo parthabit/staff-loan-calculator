@@ -3,7 +3,6 @@
 A modern, mobile-friendly **Staff Loan Calculator** designed for internal bank or office use.  
 This tool helps staff quickly calculate loan repayment details with a clear breakup of principal and interest.
 
---
 
 ## 🔹 Features
 
