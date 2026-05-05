@@ -14,7 +14,7 @@ This tool helps staff quickly calculate loan repayment details with a clear brea
   - Interest-only EMI
   - Total interest payable
   - Total repayment amount
-- Easy to use for non-technical staff
+- Easy to use for non-technical staff.
 - No backend required (100% frontend)
 
 ---
