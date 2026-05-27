@@ -450,8 +450,8 @@ select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
   <div class="card">
     <div class="card-title"><i class="ti ti-adjustments-horizontal"></i> Repayment ratio</div>
     <div class="ratio-grid" id="hl-ratio-grid">
-      <div class="ratio-btn active" onclick="setRatio('hl',2,1)"><div class="rb-val">2:1</div><div class="rb-lbl">SBI / PNB</div></div>
-      <div class="ratio-btn" onclick="setRatio('hl',3,1)"><div class="rb-val">3:1</div><div class="rb-lbl">PSU (Default)</div></div>
+      <div class="ratio-btn" onclick="setRatio('hl',2,1)"><div class="rb-val">2:1</div><div class="rb-lbl">SBI / PNB</div></div>
+      <div class="ratio-btn active" onclick="setRatio('hl',3,1)"><div class="rb-val">3:1</div><div class="rb-lbl">PSU (Default)</div></div>
       <div class="ratio-btn" onclick="setRatio('hl',0,0)"><div class="rb-val">Custom</div><div class="rb-lbl">Set manually</div></div>
     </div>
     <div id="hl-custom-ratio" style="display:none;margin-top:10px">
@@ -463,7 +463,7 @@ select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
     <div style="margin-top:10px">
       <div class="info-pill" style="margin-bottom:0">
         <i class="ti ti-info-circle"></i>
-        <p id="hl-ratio-info">Ratio <strong>2:1</strong> — for every 2 principal EMIs, 1 interest-only EMI follows. Contact your HRM for exact ratio.</p>
+        <p id="hl-ratio-info">Ratio <strong>3:1</strong> — for every 3 principal EMIs, 1 interest-only EMI follows. Contact your HRM for exact ratio.</p>
       </div>
     </div>
   </div>
@@ -541,8 +541,8 @@ select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
   <div class="card">
     <div class="card-title"><i class="ti ti-adjustments-horizontal"></i> Repayment ratio</div>
     <div class="ratio-grid" id="cl-ratio-grid">
-      <div class="ratio-btn active" onclick="setRatio('cl',2,1)"><div class="rb-val">2:1</div><div class="rb-lbl">SBI / PNB</div></div>
-      <div class="ratio-btn" onclick="setRatio('cl',3,1)"><div class="rb-val">3:1</div><div class="rb-lbl">PSU (Default)</div></div>
+      <div class="ratio-btn" onclick="setRatio('cl',2,1)"><div class="rb-val">2:1</div><div class="rb-lbl">SBI / PNB</div></div>
+      <div class="ratio-btn active" onclick="setRatio('cl',3,1)"><div class="rb-val">3:1</div><div class="rb-lbl">PSU (Default)</div></div>
       <div class="ratio-btn" onclick="setRatio('cl',0,0)"><div class="rb-val">Custom</div><div class="rb-lbl">Set manually</div></div>
     </div>
     <div id="cl-custom-ratio" style="display:none;margin-top:10px">
@@ -551,7 +551,7 @@ select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
         <div class="field"><label>Interest ratio</label><input type="number" id="cl-ri" placeholder="1" min="1"></div>
       </div>
     </div>
-    <div style="margin-top:10px"><div class="info-pill" style="margin-bottom:0"><i class="ti ti-info-circle"></i><p id="cl-ratio-info">Ratio <strong>2:1</strong> — contact your HRM for exact ratio.</p></div></div>
+    <div style="margin-top:10px"><div class="info-pill" style="margin-bottom:0"><i class="ti ti-info-circle"></i><p id="cl-ratio-info">Ratio <strong>3:1</strong> — for every 3 principal EMIs, 1 interest-only EMI follows. Contact your HRM for exact ratio.</p></div></div>
   </div>
   <button class="btn-primary" onclick="calcLoan('cl')"><i class="ti ti-calculator" style="font-size:18px"></i> Calculate EMI</button>
   <button class="btn-secondary" id="cl-sched-btn" onclick="toggleSched('cl')" style="display:none;flex-direction:row"><i class="ti ti-calendar-stats" style="font-size:16px"></i> Monthly schedule</button>
@@ -708,7 +708,7 @@ select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 
 <script>
 const donutCharts = {}, barCharts = {};
-const ratioState = { hl: {p:2,i:1}, cl: {p:2,i:1} };
+const ratioState = { hl: {p:3,i:1}, cl: {p:3,i:1} };
 const schedOpen = { hl: false, cl: false };
 
 function setTheme(mode) {
@@ -1000,3 +1000,4 @@ function calcSalary() {
 </script>
 </body>
 </html>
+
