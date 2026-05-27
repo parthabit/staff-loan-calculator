@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Loan EMI Calculator — PSU / PSB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #f5f4fb;
+  --bg2: #eceaf7;
+  --bg3: #f0effe;
+  --bg4: #e4e2f5;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.07);
+  --border2: rgba(0,0,0,0.13);
+  --text: #1a1835;
+  --text2: #4a4870;
+  --text3: #9896b8;
+  --purple: #5b4dd4;
+  --purple2: #3c3489;
+  --purple-light: rgba(91,77,212,0.1);
+  --purple-glow: rgba(91,77,212,0.06);
+  --coral: #d94f3a;
+  --coral-light: rgba(217,79,58,0.1);
+  --teal: #0f8f68;
+  --teal-light: rgba(15,143,104,0.1);
+  --amber: #c47d0a;
+  --amber-light: rgba(196,125,10,0.1);
+  --blue: #2563cc;
+  --blue-light: rgba(37,99,204,0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'DM Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+.dark {
+  --bg: #0f0e17;
+  --bg2: #1a1928;
+  --bg3: #252436;
+  --bg4: #2e2d44;
+  --surface: #1e1d2e;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f2f0ff;
+  --text2: #9896b8;
+  --text3: #5e5c7a;
+  --purple: #7c6af7;
+  --purple2: #5b4dd4;
+  --purple-light: rgba(124,106,247,0.15);
+  --purple-glow: rgba(124,106,247,0.08);
+  --coral: #f07060;
+  --coral-light: rgba(240,112,96,0.15);
+  --teal: #3ecfa0;
+  --teal-light: rgba(62,207,160,0.15);
+  --amber: #f5a623;
+  --amber-light: rgba(245,166,35,0.15);
+  --blue: #5b9cf6;
+  --blue-light: rgba(91,156,246,0.15);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.25s, color 0.25s;
+}
+
+/* ─── NAV ─── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface);
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.25rem; height: 56px;
+  transition: background 0.25s, border-color 0.25s;
+}
+.theme-toggle {
+  display: flex; align-items: center;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  border-radius: 20px; padding: 3px;
+  cursor: pointer; gap: 0;
+}
+.theme-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 16px; border: none;
+  font-family: var(--font); font-size: 11px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; background: transparent;
+  color: var(--text3); white-space: nowrap;
+}
+.theme-btn i { font-size: 13px; }
+.theme-btn.active { background: var(--surface); color: var(--purple); box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-icon {
+  width: 34px; height: 34px; background: var(--purple);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+}
+.nav-icon i { font-size: 18px; color: #fff; }
+.nav-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.nav-sub { font-size: 11px; color: var(--text3); }
+.nav-badge {
+  background: var(--purple-light); color: var(--purple);
+  border: 0.5px solid rgba(124,106,247,0.3);
+  font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 20px;
+}
+
+/* ─── TABS ─── */
+.tab-bar {
+  display: flex; gap: 4px; padding: 0.75rem 1.25rem;
+  overflow-x: auto; scrollbar-width: none;
+  border-bottom: 0.5px solid var(--border);
+  background: var(--surface);
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 20px; border: none; cursor: pointer;
+  font-family: var(--font); font-size: 12.5px; font-weight: 500;
+  white-space: nowrap; transition: all 0.2s;
+  background: transparent; color: var(--text3);
+}
+.tab-btn.active {
+  background: var(--purple-light); color: var(--purple);
+  border: 0.5px solid rgba(124,106,247,0.3);
+}
+.tab-btn i { font-size: 15px; }
+
+/* ─── PAGES ─── */
+.page { display: none; padding: 1.25rem; }
+.page.active { display: block; }
+
+/* ─── SECTION TITLE ─── */
+.sect-title {
+  font-size: 11px; font-weight: 500; color: var(--text3);
+  letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem;
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.125rem;
+  margin-bottom: 0.875rem;
+}
+.card-title {
+  font-size: 12px; font-weight: 500; color: var(--text2);
+  margin-bottom: 0.875rem; display: flex; align-items: center; gap: 6px;
+}
+.card-title i { font-size: 15px; }
+
+/* ─── LOAN TYPE SELECTOR ─── */
+.loan-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.loan-type-btn {
+  border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+  padding: 14px 10px; text-align: center; cursor: pointer;
+  background: var(--bg3); transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+}
+.loan-type-btn i { font-size: 24px; color: var(--text3); }
+.loan-type-btn span { font-size: 12.5px; color: var(--text2); }
+.loan-type-btn.active {
+  border-color: var(--purple); background: var(--purple-light);
+}
+.loan-type-btn.active i, .loan-type-btn.active span { color: var(--purple); }
+
+/* ─── FORM ─── */
+.field { margin-bottom: 0.875rem; }
+.field:last-child { margin-bottom: 0; }
+.field label { display: block; font-size: 11.5px; color: var(--text3); margin-bottom: 5px; }
+.inp-wrap { position: relative; }
+.inp-prefix {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; color: var(--text3); pointer-events: none;
+}
+.inp-suffix {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 13px; color: var(--text3); pointer-events: none;
+}
+input, select {
+  width: 100%; height: 44px;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: var(--font); font-size: 15px; outline: none;
+  padding: 0 12px; transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(124,106,247,0.12);
+}
+input.with-prefix { padding-left: 26px; }
+input.with-suffix { padding-right: 30px; }
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%235e5c7a' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+/* ─── INFO PILL ─── */
+.info-pill {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: var(--purple-glow); border: 0.5px solid rgba(124,106,247,0.2);
+  border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 0.875rem;
+}
+.info-pill i { color: var(--purple); font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.info-pill p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.info-pill strong { color: var(--purple); }
+
+/* ─── RATIO SELECTOR ─── */
+.ratio-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.ratio-btn {
+  border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+  padding: 10px 6px; text-align: center; cursor: pointer;
+  background: var(--bg3); transition: all 0.2s;
+}
+.ratio-btn .rb-val { font-size: 16px; font-weight: 600; color: var(--text2); font-family: var(--mono); }
+.ratio-btn .rb-lbl { font-size: 10px; color: var(--text3); margin-top: 2px; }
+.ratio-btn.active { border-color: var(--purple); background: var(--purple-light); }
+.ratio-btn.active .rb-val { color: var(--purple); }
+.ratio-btn.active .rb-lbl { color: var(--purple); }
+
+/* ─── BUTTONS ─── */
+.btn-primary {
+  width: 100%; height: 48px; background: var(--purple);
+  color: #fff; border: none; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  cursor: pointer; letter-spacing: 0.04em; margin-bottom: 10px;
+  transition: background 0.15s; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.btn-primary:hover { background: var(--purple2); }
+.btn-secondary {
+  width: 100%; height: 42px; background: transparent;
+  color: var(--purple); border: 0.5px solid var(--purple);
+  border-radius: var(--radius-sm); font-family: var(--font);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  letter-spacing: 0.04em; display: none;
+  align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: 0.875rem; transition: background 0.15s;
+}
+.btn-secondary:hover { background: var(--purple-light); }
+
+.result-hero {
+  background: var(--purple-light);
+  border: 0.5px solid rgba(91,77,212,0.2);
+  border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.875rem;
+  display: none;
+}
+.dark .result-hero {
+  background: linear-gradient(135deg, #1a1037 0%, #251e4a 100%);
+  border-color: rgba(124,106,247,0.25);
+}
+.rh-label { font-size: 10.5px; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; }
+.rh-main { display: flex; align-items: center; gap: 1rem; }
+.rh-donut { flex-shrink: 0; position: relative; width: 96px; height: 96px; }
+.rh-center {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  text-align: center; pointer-events: none;
+}
+.rh-center .rvc { font-size: 15px; font-weight: 600; color: var(--text); }
+.rh-center .rvl { font-size: 9px; color: var(--text3); }
+.rh-stats { flex: 1; }
+.rh-stat { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid var(--border); }
+.rh-stat:last-child { border-bottom: none; padding-bottom: 0; }
+.rh-stat-l { font-size: 11px; color: var(--text3); }
+.rh-stat-v { font-size: 14px; font-weight: 500; color: var(--text); font-family: var(--mono); }
+.rh-legend { display: flex; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+.rh-leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
+.rh-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ─── EMI CARDS ─── */
+.emi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0.875rem; }
+.emi-card { border-radius: 14px; padding: 1rem; }
+.emi-card.ep { background: rgba(124,106,247,0.12); border: 0.5px solid rgba(124,106,247,0.25); }
+.emi-card.ei { background: rgba(240,112,96,0.1); border: 0.5px solid rgba(240,112,96,0.25); }
+.ec-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+.ep .ec-icon { background: rgba(124,106,247,0.2); }
+.ei .ec-icon { background: rgba(240,112,96,0.2); }
+.ep .ec-icon i { color: var(--purple); font-size: 15px; }
+.ei .ec-icon i { color: var(--coral); font-size: 15px; }
+.ec-count { font-size: 26px; font-weight: 600; line-height: 1; font-family: var(--mono); }
+.ep .ec-count { color: var(--purple); }
+.ei .ec-count { color: var(--coral); }
+.ec-of { font-size: 10.5px; margin: 3px 0 6px; }
+.ep .ec-of { color: rgba(124,106,247,0.7); }
+.ei .ec-of { color: rgba(240,112,96,0.7); }
+.ec-amt { font-size: 14px; font-weight: 500; font-family: var(--mono); }
+.ep .ec-amt { color: #c4bcff; }
+.ei .ec-amt { color: #ffb5a8; }
+.ec-type { font-size: 10px; margin-top: 2px; color: var(--text3); }
+
+/* ─── CHART CARD ─── */
+.chart-legend { display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.cl-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
+.cl-sq { width: 9px; height: 9px; border-radius: 2px; }
+
+/* ─── SCHEDULE TABLE ─── */
+.sched-card { border-radius: var(--radius); overflow: hidden; margin-bottom: 0.875rem; display: none; border: 0.5px solid var(--border); }
+.sched-head { background: var(--purple2); padding: 12px 1rem; display: flex; align-items: center; justify-content: space-between; }
+.sched-head-l { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--text); }
+.sched-close { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 18px; padding: 0; line-height: 1; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+.tbl th { padding: 7px 10px; font-size: 10.5px; font-weight: 500; color: var(--text3); text-align: left; border-bottom: 0.5px solid var(--border); background: var(--bg3); }
+.tbl td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); color: var(--text2); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr.rp td { background: rgba(124,106,247,0.07); }
+.tbl tr.ri td { background: rgba(240,112,96,0.07); }
+.tbl .tr { text-align: right; }
+.bdg { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; }
+.bp { background: rgba(124,106,247,0.2); color: #b8b0ff; }
+.bi { background: rgba(240,112,96,0.2); color: #ffb5a8; }
+
+/* ─── COMPARE PAGE ─── */
+.compare-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0.875rem; }
+.cmp-block { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+.cmp-head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; margin-bottom: 12px; }
+.cmp-a { color: var(--purple); }
+.cmp-b { color: var(--teal); }
+.cmp-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cmp-stat { background: var(--bg3); border-radius: var(--radius-sm); padding: 10px; }
+.cmp-stat-l { font-size: 10.5px; color: var(--text3); margin-bottom: 3px; }
+.cmp-stat-v { font-size: 13px; font-weight: 500; font-family: var(--mono); }
+.cmp-stat-v.va { color: var(--purple); }
+.cmp-stat-v.vb { color: var(--teal); }
+.winner-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--teal-light); color: var(--teal); border: 0.5px solid rgba(62,207,160,0.3); border-radius: 20px; font-size: 10.5px; font-weight: 500; padding: 3px 9px; margin-left: 6px; }
+
+/* ─── ELIGIBILITY ─── */
+.elig-result { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.875rem; display: none; }
+.elig-amount { font-size: 32px; font-weight: 600; color: var(--teal); font-family: var(--mono); text-align: center; padding: 1rem 0; }
+.elig-label { font-size: 12px; color: var(--text3); text-align: center; margin-bottom: 1rem; }
+.elig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.elig-item { background: var(--bg3); border-radius: var(--radius-sm); padding: 10px; }
+.elig-item-l { font-size: 10.5px; color: var(--text3); margin-bottom: 3px; }
+.elig-item-v { font-size: 13px; font-weight: 500; color: var(--text); font-family: var(--mono); }
+
+/* ─── PERQUISITE ─── */
+.perq-result { display: none; }
+.perq-box { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.875rem; }
+.perq-val { font-size: 28px; font-weight: 600; color: var(--amber); font-family: var(--mono); }
+.perq-sublabel { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.perq-breakdown { margin-top: 1rem; }
+.perq-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 0.5px solid var(--border); font-size: 12px; }
+.perq-row:last-child { border-bottom: none; }
+.perq-row .pk { color: var(--text3); }
+.perq-row .pv { color: var(--text); font-family: var(--mono); }
+
+/* ─── SALARY ─── */
+.salary-bands { margin-bottom: 0.875rem; }
+.band-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+.band-row:last-child { border-bottom: none; }
+.band-name { color: var(--text2); }
+.band-val { font-family: var(--mono); font-size: 12px; }
+.band-val.highlight { color: var(--teal); font-weight: 500; }
+.salary-result { display: none; }
+.sal-total { font-size: 30px; font-weight: 600; color: var(--teal); font-family: var(--mono); text-align: center; padding: 1rem 0 0.5rem; }
+.sal-sublabel { font-size: 11px; color: var(--text3); text-align: center; margin-bottom: 1rem; }
+
+/* ─── SUMMARY STATS ROW ─── */
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0.875rem; }
+.stat-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px; }
+.stat-card-l { font-size: 10.5px; color: var(--text3); margin-bottom: 4px; }
+.stat-card-v { font-size: 16px; font-weight: 500; font-family: var(--mono); color: var(--text); }
+
+/* ─── DIFF RATE ─── */
+.diff-rate-rows { }
+.dr-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.dr-row:last-child { margin-bottom: 0; }
+.dr-label { font-size: 11.5px; color: var(--text2); min-width: 80px; }
+.dr-inp { flex: 1; }
+.dr-inp input { height: 38px; font-size: 13px; }
+.dr-remove { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 18px; padding: 0 4px; line-height: 1; }
+.add-slab-btn { width: 100%; height: 36px; background: transparent; border: 0.5px dashed var(--border2); border-radius: var(--radius-sm); color: var(--text3); font-family: var(--font); font-size: 12px; cursor: pointer; margin-top: 8px; transition: all 0.15s; }
+.add-slab-btn:hover { border-color: var(--purple); color: var(--purple); }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* ─── ANIM ─── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.res-anim { animation: fadeUp 0.3s ease; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-icon"><i class="ti ti-building-bank"></i></div>
+    <div>
+      <div class="nav-title">Staff Loan Calculator</div>
+      <div class="nav-sub">PSU / PSB Simple Interest</div>
+    </div>
+  </div>
+  <div class="theme-toggle">
+    <button class="theme-btn active" id="btn-light" onclick="setTheme('light')"><i class="ti ti-sun"></i> Light</button>
+    <button class="theme-btn" id="btn-dark" onclick="setTheme('dark')"><i class="ti ti-moon"></i> Dark</button>
+  </div>
+</nav>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showPage('home-loan')"><i class="ti ti-home"></i>Home Loan</button>
+  <button class="tab-btn" onclick="showPage('car-loan')"><i class="ti ti-car"></i>Car Loan</button>
+  <button class="tab-btn" onclick="showPage('compare')"><i class="ti ti-git-compare"></i>Compare</button>
+  <button class="tab-btn" onclick="showPage('eligibility')"><i class="ti ti-certificate"></i>Eligibility</button>
+  <button class="tab-btn" onclick="showPage('perquisite')"><i class="ti ti-receipt-tax"></i>Perquisite Tax</button>
+  <button class="tab-btn" onclick="showPage('salary')"><i class="ti ti-wallet"></i>Salary</button>
+</div>
+
+<!-- ═══════════════════════════════ HOME LOAN ═══════════════════════════════ -->
+<div id="page-home-loan" class="page active">
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-home-2"></i> Loan details</div>
+    <div class="field">
+      <label>Loan amount</label>
+      <div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="hl-amt" class="with-prefix" placeholder="e.g. 2500000" min="0"></div>
+    </div>
+    <div class="field">
+      <label>Interest rate type</label>
+      <select id="hl-rate-type" onchange="toggleDiffRate('hl')">
+        <option value="flat">Flat rate</option>
+        <option value="diff">Differential rate (slab-wise)</option>
+      </select>
+    </div>
+    <div id="hl-flat-rate" class="field">
+      <label>Annual interest rate</label>
+      <div class="inp-wrap"><input type="number" id="hl-rate" class="with-suffix" placeholder="e.g. 6.5" step="0.1" min="0"><span class="inp-suffix">%</span></div>
+    </div>
+    <div id="hl-diff-rate" style="display:none">
+      <div class="field">
+        <label>Differential slabs (amount up to → rate)</label>
+        <div class="diff-rate-rows" id="hl-slabs">
+          <div class="dr-row"><span class="dr-label">Up to ₹40L</span><div class="dr-inp"><div class="inp-wrap"><input type="number" id="hl-slab-0-rate" class="with-suffix" placeholder="6.5" step="0.1"><span class="inp-suffix">%</span></div></div></div>
+          <div class="dr-row"><span class="dr-label">Above ₹40L</span><div class="dr-inp"><div class="inp-wrap"><input type="number" id="hl-slab-1-rate" class="with-suffix" placeholder="7.0" step="0.1"><span class="inp-suffix">%</span></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Tenure</label><input type="number" id="hl-tenure" placeholder="e.g. 20" min="1"></div>
+      <div class="field"><label>Unit</label><select id="hl-tenure-unit"><option value="years">Years</option><option value="months">Months</option></select></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-adjustments-horizontal"></i> Repayment ratio</div>
+    <div class="ratio-grid" id="hl-ratio-grid">
+      <div class="ratio-btn active" onclick="setRatio('hl',2,1)"><div class="rb-val">2:1</div><div class="rb-lbl">SBI / PNB</div></div>
+      <div class="ratio-btn" onclick="setRatio('hl',3,1)"><div class="rb-val">3:1</div><div class="rb-lbl">PSU (Default)</div></div>
+      <div class="ratio-btn" onclick="setRatio('hl',0,0)"><div class="rb-val">Custom</div><div class="rb-lbl">Set manually</div></div>
+    </div>
+    <div id="hl-custom-ratio" style="display:none;margin-top:10px">
+      <div class="row2">
+        <div class="field"><label>Principal ratio</label><input type="number" id="hl-rp" placeholder="3" min="1"></div>
+        <div class="field"><label>Interest ratio</label><input type="number" id="hl-ri" placeholder="1" min="1"></div>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <div class="info-pill" style="margin-bottom:0">
+        <i class="ti ti-info-circle"></i>
+        <p id="hl-ratio-info">Ratio <strong>2:1</strong> — for every 2 principal EMIs, 1 interest-only EMI follows. Contact your HRM for exact ratio.</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="calcLoan('hl')"><i class="ti ti-calculator" style="font-size:18px"></i> Calculate EMI</button>
+  <button class="btn-secondary" id="hl-sched-btn" onclick="toggleSched('hl')" style="display:none;flex-direction:row"><i class="ti ti-calendar-stats" style="font-size:16px"></i> Monthly schedule</button>
+
+  <div class="result-hero" id="hl-res-hero">
+    <div class="rh-label">Results summary</div>
+    <div class="rh-main">
+      <div class="rh-donut"><canvas id="hl-donut" width="96" height="96"></canvas>
+        <div class="rh-center"><div class="rvc" id="hl-pct">—</div><div class="rvl">interest</div></div>
+      </div>
+      <div class="rh-stats">
+        <div class="rh-stat"><span class="rh-stat-l">Loan amount</span><span class="rh-stat-v" id="hl-principal-disp">—</span></div>
+        <div class="rh-stat"><span class="rh-stat-l">Total interest</span><span class="rh-stat-v" id="hl-tot-int">—</span></div>
+        <div class="rh-stat"><span class="rh-stat-l">Total repayment</span><span class="rh-stat-v" id="hl-tot-pay">—</span></div>
+      </div>
+    </div>
+    <div class="rh-legend">
+      <div class="rh-leg"><div class="rh-dot" style="background:#7c6af7"></div>Principal</div>
+      <div class="rh-leg"><div class="rh-dot" style="background:#f07060"></div>Interest</div>
+    </div>
+  </div>
+
+  <div class="emi-row" id="hl-emi-row" style="display:none">
+    <div class="emi-card ep">
+      <div class="ec-icon"><i class="ti ti-home-2"></i></div>
+      <div class="ec-count" id="hl-p-count">—</div>
+      <div class="ec-of">principal EMIs</div>
+      <div class="ec-amt">₹<span id="hl-p-emi">—</span>/-</div>
+      <div class="ec-type">per instalment</div>
+    </div>
+    <div class="emi-card ei">
+      <div class="ec-icon"><i class="ti ti-receipt"></i></div>
+      <div class="ec-count" id="hl-i-count">—</div>
+      <div class="ec-of">interest EMIs</div>
+      <div class="ec-amt">₹<span id="hl-i-emi">—</span>/-</div>
+      <div class="ec-type">per instalment</div>
+    </div>
+  </div>
+
+  <div class="card" id="hl-chart-card" style="display:none">
+    <div class="card-title"><i class="ti ti-chart-bar"></i> Balance over time</div>
+    <div class="chart-legend">
+      <span class="cl-item"><span class="cl-sq" style="background:#7c6af7"></span>Outstanding balance</span>
+      <span class="cl-item"><span class="cl-sq" style="background:#f07060"></span>EMI amount</span>
+    </div>
+    <div style="position:relative;width:100%;height:180px"><canvas id="hl-bar" role="img" aria-label="Bar chart showing outstanding loan balance reducing over tenure"></canvas></div>
+  </div>
+
+  <div class="sched-card" id="hl-sched-card">
+    <div class="sched-head">
+      <div class="sched-head-l"><i class="ti ti-list-numbers"></i> Monthly EMI schedule</div>
+      <button class="sched-close" onclick="toggleSched('hl')" aria-label="Close"><i class="ti ti-x"></i></button>
+    </div>
+    <table class="tbl">
+      <thead><tr><th style="width:32px">#</th><th style="width:70px">Type</th><th class="tr">EMI (₹)</th><th class="tr">Balance (₹)</th></tr></thead>
+      <tbody id="hl-sched-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ CAR LOAN ═══════════════════════════════ -->
+<div id="page-car-loan" class="page">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-car"></i> Car loan details</div>
+    <div class="field"><label>Loan amount</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="cl-amt" class="with-prefix" placeholder="e.g. 800000" min="0"></div></div>
+    <div class="field"><label>Annual interest rate</label><div class="inp-wrap"><input type="number" id="cl-rate" class="with-suffix" placeholder="e.g. 7.0" step="0.1" min="0"><span class="inp-suffix">%</span></div></div>
+    <div class="row2">
+      <div class="field"><label>Tenure</label><input type="number" id="cl-tenure" placeholder="e.g. 7" min="1"></div>
+      <div class="field"><label>Unit</label><select id="cl-tenure-unit"><option value="years">Years</option><option value="months">Months</option></select></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-adjustments-horizontal"></i> Repayment ratio</div>
+    <div class="ratio-grid" id="cl-ratio-grid">
+      <div class="ratio-btn active" onclick="setRatio('cl',2,1)"><div class="rb-val">2:1</div><div class="rb-lbl">SBI / PNB</div></div>
+      <div class="ratio-btn" onclick="setRatio('cl',3,1)"><div class="rb-val">3:1</div><div class="rb-lbl">PSU (Default)</div></div>
+      <div class="ratio-btn" onclick="setRatio('cl',0,0)"><div class="rb-val">Custom</div><div class="rb-lbl">Set manually</div></div>
+    </div>
+    <div id="cl-custom-ratio" style="display:none;margin-top:10px">
+      <div class="row2">
+        <div class="field"><label>Principal ratio</label><input type="number" id="cl-rp" placeholder="3" min="1"></div>
+        <div class="field"><label>Interest ratio</label><input type="number" id="cl-ri" placeholder="1" min="1"></div>
+      </div>
+    </div>
+    <div style="margin-top:10px"><div class="info-pill" style="margin-bottom:0"><i class="ti ti-info-circle"></i><p id="cl-ratio-info">Ratio <strong>2:1</strong> — contact your HRM for exact ratio.</p></div></div>
+  </div>
+  <button class="btn-primary" onclick="calcLoan('cl')"><i class="ti ti-calculator" style="font-size:18px"></i> Calculate EMI</button>
+  <button class="btn-secondary" id="cl-sched-btn" onclick="toggleSched('cl')" style="display:none;flex-direction:row"><i class="ti ti-calendar-stats" style="font-size:16px"></i> Monthly schedule</button>
+
+  <div class="result-hero" id="cl-res-hero">
+    <div class="rh-label">Results summary</div>
+    <div class="rh-main">
+      <div class="rh-donut"><canvas id="cl-donut" width="96" height="96"></canvas>
+        <div class="rh-center"><div class="rvc" id="cl-pct">—</div><div class="rvl">interest</div></div>
+      </div>
+      <div class="rh-stats">
+        <div class="rh-stat"><span class="rh-stat-l">Loan amount</span><span class="rh-stat-v" id="cl-principal-disp">—</span></div>
+        <div class="rh-stat"><span class="rh-stat-l">Total interest</span><span class="rh-stat-v" id="cl-tot-int">—</span></div>
+        <div class="rh-stat"><span class="rh-stat-l">Total repayment</span><span class="rh-stat-v" id="cl-tot-pay">—</span></div>
+      </div>
+    </div>
+    <div class="rh-legend">
+      <div class="rh-leg"><div class="rh-dot" style="background:#7c6af7"></div>Principal</div>
+      <div class="rh-leg"><div class="rh-dot" style="background:#f07060"></div>Interest</div>
+    </div>
+  </div>
+  <div class="emi-row" id="cl-emi-row" style="display:none">
+    <div class="emi-card ep"><div class="ec-icon"><i class="ti ti-car"></i></div><div class="ec-count" id="cl-p-count">—</div><div class="ec-of">principal EMIs</div><div class="ec-amt">₹<span id="cl-p-emi">—</span>/-</div><div class="ec-type">per instalment</div></div>
+    <div class="emi-card ei"><div class="ec-icon"><i class="ti ti-receipt"></i></div><div class="ec-count" id="cl-i-count">—</div><div class="ec-of">interest EMIs</div><div class="ec-amt">₹<span id="cl-i-emi">—</span>/-</div><div class="ec-type">per instalment</div></div>
+  </div>
+  <div class="card" id="cl-chart-card" style="display:none">
+    <div class="card-title"><i class="ti ti-chart-bar"></i> Balance over time</div>
+    <div class="chart-legend">
+      <span class="cl-item"><span class="cl-sq" style="background:#7c6af7"></span>Outstanding balance</span>
+      <span class="cl-item"><span class="cl-sq" style="background:#f07060"></span>EMI amount</span>
+    </div>
+    <div style="position:relative;width:100%;height:180px"><canvas id="cl-bar" role="img" aria-label="Bar chart showing outstanding car loan balance over tenure"></canvas></div>
+  </div>
+  <div class="sched-card" id="cl-sched-card">
+    <div class="sched-head"><div class="sched-head-l"><i class="ti ti-list-numbers"></i> Monthly EMI schedule</div><button class="sched-close" onclick="toggleSched('cl')" aria-label="Close"><i class="ti ti-x"></i></button></div>
+    <table class="tbl"><thead><tr><th style="width:32px">#</th><th style="width:70px">Type</th><th class="tr">EMI (₹)</th><th class="tr">Balance (₹)</th></tr></thead><tbody id="cl-sched-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ COMPARE ═══════════════════════════════ -->
+<div id="page-compare" class="page">
+  <div class="info-pill"><i class="ti ti-git-compare"></i><p>Compare two loan scenarios side-by-side — different amounts, rates, or tenures.</p></div>
+  <div class="compare-inputs">
+    <div class="cmp-block">
+      <div class="cmp-head cmp-a"><i class="ti ti-square-letter-a"></i> Loan A</div>
+      <div class="field"><label>Amount (₹)</label><input type="number" id="cmp-a-amt" placeholder="500000"></div>
+      <div class="field"><label>Rate (%)</label><div class="inp-wrap"><input type="number" id="cmp-a-rate" class="with-suffix" placeholder="5.5" step="0.1"><span class="inp-suffix">%</span></div></div>
+      <div class="field"><label>Tenure (yrs)</label><input type="number" id="cmp-a-tenure" placeholder="10"></div>
+      <div class="field"><label>Ratio P:I</label><select id="cmp-a-ratio"><option value="2:1">2:1</option><option value="3:1" selected>3:1</option><option value="4:1">4:1</option></select></div>
+    </div>
+    <div class="cmp-block">
+      <div class="cmp-head cmp-b"><i class="ti ti-square-letter-b"></i> Loan B</div>
+      <div class="field"><label>Amount (₹)</label><input type="number" id="cmp-b-amt" placeholder="500000"></div>
+      <div class="field"><label>Rate (%)</label><div class="inp-wrap"><input type="number" id="cmp-b-rate" class="with-suffix" placeholder="7.0" step="0.1"><span class="inp-suffix">%</span></div></div>
+      <div class="field"><label>Tenure (yrs)</label><input type="number" id="cmp-b-tenure" placeholder="10"></div>
+      <div class="field"><label>Ratio P:I</label><select id="cmp-b-ratio"><option value="2:1">2:1</option><option value="3:1" selected>3:1</option><option value="4:1">4:1</option></select></div>
+    </div>
+  </div>
+  <button class="btn-primary" onclick="calcCompare()"><i class="ti ti-git-compare" style="font-size:18px"></i> Compare loans</button>
+  <div id="cmp-result" style="display:none" class="res-anim">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-table"></i> Comparison</div>
+      <div style="overflow-x:auto">
+        <table class="tbl" style="table-layout:auto">
+          <thead><tr><th>Metric</th><th style="color:#b8b0ff">Loan A</th><th style="color:#6ee7c7">Loan B</th></tr></thead>
+          <tbody id="cmp-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar"></i> Visual comparison</div>
+      <div style="position:relative;width:100%;height:220px"><canvas id="cmp-chart" role="img" aria-label="Bar chart comparing Loan A and Loan B on key metrics"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ ELIGIBILITY ═══════════════════════════════ -->
+<div id="page-eligibility" class="page">
+  <div class="info-pill"><i class="ti ti-certificate"></i><p>PSU/PSB staff loan eligibility is typically <strong>36× basic pay</strong> for home loans and <strong>12× basic pay</strong> for car loans. Check your HR circular for exact multiples.</p></div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-user"></i> Your details</div>
+    <div class="field"><label>Basic pay (₹ per month)</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="el-basic" class="with-prefix" placeholder="e.g. 45000"></div></div>
+    <div class="field"><label>DA % (dearness allowance)</label><div class="inp-wrap"><input type="number" id="el-da" class="with-suffix" placeholder="e.g. 45" step="0.1"><span class="inp-suffix">%</span></div></div>
+    <div class="field"><label>Loan type</label><select id="el-type"><option value="home">Home loan (36× basic)</option><option value="car">Car loan (12× basic)</option><option value="personal">Personal loan (10× basic)</option></select></div>
+    <div class="field"><label>Custom multiplier (optional override)</label><input type="number" id="el-mult" placeholder="Leave blank to use standard"></div>
+  </div>
+  <button class="btn-primary" onclick="calcEligibility()"><i class="ti ti-certificate" style="font-size:18px"></i> Check eligibility</button>
+  <div class="elig-result res-anim" id="el-result">
+    <div class="elig-label">Maximum eligible loan amount</div>
+    <div class="elig-amount" id="el-amount">—</div>
+    <div class="elig-grid" id="el-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PERQUISITE ═══════════════════════════════ -->
+<div id="page-perquisite" class="page">
+  <div class="info-pill"><i class="ti ti-receipt-tax"></i><p>Under Income Tax Act, interest benefit on staff loans is a <strong>perquisite</strong>. If the rate charged is below SBI PLR, the difference is taxable as salary income.</p></div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-receipt-tax"></i> Perquisite details</div>
+    <div class="field"><label>Outstanding loan balance (₹)</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="pq-balance" class="with-prefix" placeholder="e.g. 500000"></div></div>
+    <div class="field"><label>Rate charged by employer (%)</label><div class="inp-wrap"><input type="number" id="pq-emp-rate" class="with-suffix" placeholder="e.g. 5.5" step="0.1"><span class="inp-suffix">%</span></div></div>
+    <div class="field"><label>SBI PLR / market rate (%)</label><div class="inp-wrap"><input type="number" id="pq-sbi-rate" class="with-suffix" placeholder="e.g. 8.5" step="0.1"><span class="inp-suffix">%</span></div></div>
+    <div class="field"><label>Your income tax slab (%)</label><select id="pq-tax-slab"><option value="5">5%</option><option value="20" selected>20%</option><option value="30">30%</option></select></div>
+  </div>
+  <button class="btn-primary" onclick="calcPerquisite()"><i class="ti ti-calculator" style="font-size:18px"></i> Calculate perquisite</button>
+  <div class="perq-result res-anim" id="pq-result">
+    <div class="perq-box">
+      <div class="card-title"><i class="ti ti-alert-circle"></i> Annual perquisite value</div>
+      <div class="perq-val" id="pq-val">—</div>
+      <div class="perq-sublabel">This amount is added to your taxable salary</div>
+      <div class="perq-breakdown" id="pq-breakdown"></div>
+    </div>
+    <div class="perq-box">
+      <div class="card-title"><i class="ti ti-cash"></i> Tax impact</div>
+      <div class="perq-val" id="pq-tax" style="color:var(--coral)">—</div>
+      <div class="perq-sublabel">Additional tax outgo per year</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SALARY ═══════════════════════════════ -->
+<div id="page-salary" class="page">
+  <div class="info-pill"><i class="ti ti-wallet"></i><p>Calculate your in-hand salary under <strong>12th bipartite</strong> (current) or <strong>13th bipartite</strong> (17% hike). Enter basic pay as per your scale.</p></div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-user-dollar"></i> Salary inputs</div>
+    <div class="field"><label>Basic pay (₹)</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="sal-basic" class="with-prefix" placeholder="e.g. 45000"></div></div>
+    <div class="field"><label>DA % (12th bipartite)</label><div class="inp-wrap"><input type="number" id="sal-da" class="with-suffix" placeholder="e.g. 45" step="0.1"><span class="inp-suffix">%</span></div></div>
+    <div class="field"><label>HRA % of basic</label><div class="inp-wrap"><input type="number" id="sal-hra" class="with-suffix" placeholder="e.g. 9" step="0.1"><span class="inp-suffix">%</span></div></div>
+    <div class="field"><label>Special allowance (₹)</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="sal-spl" class="with-prefix" placeholder="e.g. 3000"></div></div>
+    <div class="field"><label>13th bipartite hike</label><select id="sal-bip"><option value="0">Not applicable</option><option value="17">17% on basic (13th bipartite)</option></select></div>
+  </div>
+  <button class="btn-primary" onclick="calcSalary()"><i class="ti ti-wallet" style="font-size:18px"></i> Calculate salary</button>
+  <div class="salary-result res-anim" id="sal-result">
+    <div class="card">
+      <div id="sal-bipartite-label" style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:.07em">12th bipartite</div>
+      <div class="sal-total" id="sal-gross">—</div>
+      <div class="sal-sublabel">Gross monthly salary</div>
+      <table class="tbl" style="margin-top:8px;table-layout:auto">
+        <thead><tr><th>Component</th><th class="tr">Amount (₹)</th></tr></thead>
+        <tbody id="sal-tbody"></tbody>
+      </table>
+    </div>
+    <div class="card" id="sal-13th-card" style="display:none">
+      <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:.07em">13th bipartite (after 17% hike)</div>
+      <div class="sal-total" id="sal-gross-13" style="color:var(--amber)">—</div>
+      <div class="sal-sublabel">Revised gross monthly salary</div>
+      <table class="tbl" style="margin-top:8px;table-layout:auto">
+        <thead><tr><th>Component</th><th class="tr">Amount (₹)</th></tr></thead>
+        <tbody id="sal-tbody-13"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const donutCharts = {}, barCharts = {};
+const ratioState = { hl: {p:2,i:1}, cl: {p:2,i:1} };
+const schedOpen = { hl: false, cl: false };
+
+function setTheme(mode) {
+  document.documentElement.classList.toggle('dark', mode === 'dark');
+  document.getElementById('btn-light').classList.toggle('active', mode === 'light');
+  document.getElementById('btn-dark').classList.toggle('active', mode === 'dark');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function fmt(n) { return Math.floor(n).toLocaleString('en-IN'); }
+function fmtR(n) { return Math.round(n).toLocaleString('en-IN'); }
+
+function setRatio(pfx, p, i) {
+  const btns = document.querySelectorAll('#'+pfx+'-ratio-grid .ratio-btn');
+  btns.forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const custom = document.getElementById(pfx+'-custom-ratio');
+  if (p === 0) { custom.style.display = 'block'; ratioState[pfx] = null; }
+  else { custom.style.display = 'none'; ratioState[pfx] = {p,i}; }
+  const info = document.getElementById(pfx+'-ratio-info');
+  if (p>0) info.innerHTML = `Ratio <strong>${p}:${i}</strong> — for every ${p} principal EMIs, ${i} interest-only EMI(s) follow. Contact your HRM for exact ratio.`;
+}
+
+function toggleDiffRate(pfx) {
+  const type = document.getElementById(pfx+'-rate-type').value;
+  document.getElementById(pfx+'-flat-rate').style.display = type === 'flat' ? 'block' : 'none';
+  document.getElementById(pfx+'-diff-rate').style.display = type === 'diff' ? 'block' : 'none';
+}
+
+function getEffectiveRate(pfx, amount) {
+  const rateType = document.getElementById(pfx+'-rate-type') ? document.getElementById(pfx+'-rate-type').value : 'flat';
+  if (rateType === 'diff') {
+    const r0 = parseFloat(document.getElementById(pfx+'-slab-0-rate').value) || 6.5;
+    const r1 = parseFloat(document.getElementById(pfx+'-slab-1-rate').value) || 7.0;
+    const slab = 4000000;
+    if (amount <= slab) return r0;
+    const wt = (slab * r0 + (amount - slab) * r1) / amount;
+    return wt;
+  }
+  return parseFloat(document.getElementById(pfx+'-rate').value);
+}
+
+function getRatio(pfx) {
+  if (!ratioState[pfx]) {
+    const rp = parseFloat(document.getElementById(pfx+'-rp').value) || 3;
+    const ri = parseFloat(document.getElementById(pfx+'-ri').value) || 1;
+    return {p: rp, i: ri};
+  }
+  return ratioState[pfx];
+}
+
+function calcLoan(pfx) {
+  const P = parseFloat(document.getElementById(pfx+'-amt').value);
+  const annRate = getEffectiveRate(pfx, P);
+  const tVal = parseFloat(document.getElementById(pfx+'-tenure').value);
+  const tUnit = document.getElementById(pfx+'-tenure-unit').value;
+  if (!P||!annRate||!tVal||P<=0||annRate<=0||tVal<=0) { alert('Please enter valid values.'); return; }
+  const N = tUnit==='years' ? Math.round(tVal*12) : Math.round(tVal);
+  const ratio = getRatio(pfx);
+  const total = ratio.p + ratio.i;
+  const pCount = Math.round(N * ratio.p / total);
+  const iCount = N - pCount;
+  const pEmi = P / pCount;
+  const monthlyRate = annRate / 100 / 12;
+  let balance = P, totalInterest = 0;
+  for (let i = 0; i < pCount; i++) { totalInterest += balance * monthlyRate; balance -= pEmi; }
+  const iEmi = totalInterest / iCount;
+  const totalRepay = P + totalInterest;
+  const pct = Math.round(totalInterest / totalRepay * 100);
+
+  document.getElementById(pfx+'-p-count').textContent = pCount;
+  document.getElementById(pfx+'-p-emi').textContent = fmt(pEmi);
+  document.getElementById(pfx+'-i-count').textContent = iCount;
+  document.getElementById(pfx+'-i-emi').textContent = fmt(iEmi);
+  document.getElementById(pfx+'-principal-disp').textContent = '₹'+fmt(P);
+  document.getElementById(pfx+'-tot-int').textContent = '₹'+fmt(totalInterest);
+  document.getElementById(pfx+'-tot-pay').textContent = '₹'+fmt(totalRepay);
+  document.getElementById(pfx+'-pct').textContent = pct+'%';
+
+  document.getElementById(pfx+'-res-hero').style.display = 'block';
+  document.getElementById(pfx+'-res-hero').className = 'result-hero res-anim';
+  document.getElementById(pfx+'-emi-row').style.display = 'grid';
+  document.getElementById(pfx+'-chart-card').style.display = 'block';
+  const sb = document.getElementById(pfx+'-sched-btn');
+  sb.style.display = 'flex';
+
+  drawDonut(pfx, P, totalInterest);
+  drawBar(pfx, P, pCount, pEmi, iEmi, iCount, N);
+
+  schedOpen[pfx] = false;
+  document.getElementById(pfx+'-sched-card').style.display = 'none';
+  sb.innerHTML = '<i class="ti ti-calendar-stats" style="font-size:16px"></i> Monthly schedule';
+
+  window._loanData = window._loanData || {};
+  window._loanData[pfx] = {P, pCount, iCount, pEmi, iEmi, totalInterest, totalRepay};
+}
+
+function drawDonut(pfx, P, totalInterest) {
+  if (donutCharts[pfx]) donutCharts[pfx].destroy();
+  const ctx = document.getElementById(pfx+'-donut').getContext('2d');
+  donutCharts[pfx] = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels: ['Principal','Interest'], datasets: [{ data: [Math.floor(P), Math.floor(totalInterest)], backgroundColor: ['#7c6af7','#f07060'], borderWidth: 0 }] },
+    options: { responsive: false, cutout: '68%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ₹'+Math.floor(c.raw).toLocaleString('en-IN') } } } }
+  });
+}
+
+function drawBar(pfx, P, pCount, pEmi, iEmi, iCount, N) {
+  if (barCharts[pfx]) barCharts[pfx].destroy();
+  const labels=[], balData=[], emiData=[];
+  let bal = P;
+  const step = Math.max(1, Math.floor(N/10));
+  for (let i=1; i<=N; i++) {
+    if (i<=pCount) bal -= pEmi;
+    if (i%step===0||i===N) { labels.push('M'+i); balData.push(Math.max(0,Math.floor(bal))); emiData.push(i<=pCount?Math.floor(pEmi):Math.floor(iEmi)); }
+  }
+  const ctx = document.getElementById(pfx+'-bar').getContext('2d');
+  barCharts[pfx] = new Chart(ctx, {
+    type: 'bar', data: { labels, datasets: [{ label:'Balance', data:balData, backgroundColor:'#7c6af7', borderRadius:3 }, { label:'EMI', data:emiData, backgroundColor:'#f07060', borderRadius:3 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>' ₹'+c.raw.toLocaleString('en-IN')}}}, scales:{ x:{ticks:{font:{size:10},color:'#5e5c7a',maxRotation:0,autoSkip:true},grid:{display:false}}, y:{ticks:{font:{size:10},color:'#5e5c7a',callback:v=>v>=100000?'₹'+(v/100000).toFixed(0)+'L':v>=1000?'₹'+(v/1000).toFixed(0)+'K':'₹'+v},grid:{color:'rgba(255,255,255,0.04)'}}}}
+  });
+}
+
+function toggleSched(pfx) {
+  schedOpen[pfx] = !schedOpen[pfx];
+  const card = document.getElementById(pfx+'-sched-card');
+  const btn = document.getElementById(pfx+'-sched-btn');
+  if (schedOpen[pfx]) {
+    buildSched(pfx); card.style.display='block';
+    btn.innerHTML='<i class="ti ti-x" style="font-size:16px"></i> Hide schedule';
+  } else {
+    card.style.display='none';
+    btn.innerHTML='<i class="ti ti-calendar-stats" style="font-size:16px"></i> Monthly schedule';
+  }
+}
+
+function buildSched(pfx) {
+  const d = window._loanData && window._loanData[pfx]; if(!d) return;
+  const tbody = document.getElementById(pfx+'-sched-body'); tbody.innerHTML='';
+  let bal = d.P;
+  for (let i=1; i<=d.pCount+d.iCount; i++) {
+    const isP = i<=d.pCount; const amt = isP?d.pEmi:d.iEmi;
+    if(isP) bal -= d.pEmi;
+    const tr = document.createElement('tr'); tr.className = isP?'rp':'ri';
+    tr.innerHTML = `<td>${i}</td><td><span class="bdg ${isP?'bp':'bi'}">${isP?'Prin.':'Int.'}</span></td><td class="tr" style="font-weight:500">${fmt(amt)}</td><td class="tr">${fmt(Math.max(0,bal))}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+function parseRatioStr(s) { const [p,i]=s.split(':').map(Number); return {p,i}; }
+
+function calcOneLoan(amt, rate, tenureYrs, rp, ri) {
+  const N = Math.round(tenureYrs * 12);
+  const total = rp + ri;
+  const pCount = Math.round(N * rp / total);
+  const iCount = N - pCount;
+  const pEmi = amt / pCount;
+  const monthlyRate = rate / 100 / 12;
+  let bal = amt, totInt = 0;
+  for (let i=0; i<pCount; i++) { totInt += bal * monthlyRate; bal -= pEmi; }
+  const iEmi = totInt / iCount;
+  return { pCount, iCount, pEmi, iEmi, totalInterest: totInt, totalRepay: amt + totInt };
+}
+
+let cmpChart = null;
+function calcCompare() {
+  const aA = parseFloat(document.getElementById('cmp-a-amt').value);
+  const rA = parseFloat(document.getElementById('cmp-a-rate').value);
+  const tA = parseFloat(document.getElementById('cmp-a-tenure').value);
+  const ratA = parseRatioStr(document.getElementById('cmp-a-ratio').value);
+  const aB = parseFloat(document.getElementById('cmp-b-amt').value);
+  const rB = parseFloat(document.getElementById('cmp-b-rate').value);
+  const tB = parseFloat(document.getElementById('cmp-b-tenure').value);
+  const ratB = parseRatioStr(document.getElementById('cmp-b-ratio').value);
+  if (!aA||!rA||!tA||!aB||!rB||!tB) { alert('Fill all fields for both loans.'); return; }
+  const A = calcOneLoan(aA,rA,tA,ratA.p,ratA.i);
+  const B = calcOneLoan(aB,rB,tB,ratB.p,ratB.i);
+  const rows = [
+    ['Loan amount','₹'+fmt(aA),'₹'+fmt(aB)],
+    ['Principal EMIs',A.pCount+' × ₹'+fmt(A.pEmi),B.pCount+' × ₹'+fmt(B.pEmi)],
+    ['Interest EMIs',A.iCount+' × ₹'+fmt(A.iEmi),B.iCount+' × ₹'+fmt(B.iEmi)],
+    ['Total interest','₹'+fmt(A.totalInterest),'₹'+fmt(B.totalInterest)],
+    ['Total repayment','₹'+fmt(A.totalRepay),'₹'+fmt(B.totalRepay)],
+  ];
+  const tbody = document.getElementById('cmp-tbody'); tbody.innerHTML='';
+  const cheaper = A.totalRepay <= B.totalRepay ? 'A' : 'B';
+  rows.forEach((r,idx) => {
+    const tr = document.createElement('tr');
+    const win = idx>=3 ? `<span class="winner-badge"><i class="ti ti-trophy" style="font-size:11px"></i>${cheaper}</span>` : '';
+    tr.innerHTML = `<td style="color:var(--text3);font-size:12px">${r[0]}</td><td style="font-family:var(--mono);font-size:12px;color:#b8b0ff">${r[1]}${idx>=3&&cheaper==='A'?win:''}</td><td style="font-family:var(--mono);font-size:12px;color:#6ee7c7">${r[2]}${idx>=3&&cheaper==='B'?win:''}</td>`;
+    tbody.appendChild(tr);
+  });
+  if (cmpChart) cmpChart.destroy();
+  const ctx = document.getElementById('cmp-chart').getContext('2d');
+  cmpChart = new Chart(ctx, {
+    type:'bar', data:{ labels:['Principal EMI','Interest EMI','Total Interest','Total Repayment'], datasets:[{ label:'Loan A', data:[Math.floor(A.pEmi),Math.floor(A.iEmi),Math.floor(A.totalInterest),Math.floor(A.totalRepay)], backgroundColor:'#7c6af7', borderRadius:4 }, { label:'Loan B', data:[Math.floor(B.pEmi),Math.floor(B.iEmi),Math.floor(B.totalInterest),Math.floor(B.totalRepay)], backgroundColor:'#3ecfa0', borderRadius:4 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{labels:{color:'#9896b8',font:{size:11}}}, tooltip:{callbacks:{label:c=>' ₹'+c.raw.toLocaleString('en-IN')}}}, scales:{ x:{ticks:{color:'#5e5c7a',font:{size:10}},grid:{display:false}}, y:{ticks:{color:'#5e5c7a',font:{size:10},callback:v=>v>=100000?'₹'+(v/100000).toFixed(0)+'L':v>=1000?'₹'+(v/1000).toFixed(0)+'K':'₹'+v},grid:{color:'rgba(255,255,255,0.04)'}}}}
+  });
+  document.getElementById('cmp-result').style.display = 'block';
+  document.getElementById('cmp-result').className = 'res-anim';
+}
+
+function calcEligibility() {
+  const basic = parseFloat(document.getElementById('el-basic').value);
+  const da = parseFloat(document.getElementById('el-da').value)||0;
+  const type = document.getElementById('el-type').value;
+  const customMult = parseFloat(document.getElementById('el-mult').value);
+  if (!basic||basic<=0) { alert('Enter valid basic pay.'); return; }
+  const mult = customMult || (type==='home'?36:type==='car'?12:10);
+  const basicPlusDA = basic * (1 + da/100);
+  const eligible = basicPlusDA * mult;
+  document.getElementById('el-amount').textContent = '₹'+fmt(eligible);
+  const grid = document.getElementById('el-grid'); grid.innerHTML='';
+  const items = [['Basic pay','₹'+fmt(basic)],['DA ('+da+'%)','₹'+fmt(basic*da/100)],['Basic + DA','₹'+fmt(basicPlusDA)],['Multiplier',mult+'×'],];
+  items.forEach(it => {
+    grid.innerHTML += `<div class="elig-item"><div class="elig-item-l">${it[0]}</div><div class="elig-item-v">${it[1]}</div></div>`;
+  });
+  document.getElementById('el-result').style.display = 'block';
+  document.getElementById('el-result').className = 'elig-result res-anim';
+}
+
+function calcPerquisite() {
+  const bal = parseFloat(document.getElementById('pq-balance').value);
+  const empRate = parseFloat(document.getElementById('pq-emp-rate').value);
+  const sbiRate = parseFloat(document.getElementById('pq-sbi-rate').value);
+  const taxSlab = parseFloat(document.getElementById('pq-tax-slab').value);
+  if (!bal||!empRate||!sbiRate) { alert('Fill all fields.'); return; }
+  const diff = Math.max(0, sbiRate - empRate);
+  const perqVal = bal * diff / 100;
+  const taxImpact = perqVal * taxSlab / 100;
+  document.getElementById('pq-val').textContent = '₹'+fmtR(perqVal);
+  document.getElementById('pq-tax').textContent = '₹'+fmtR(taxImpact);
+  document.getElementById('pq-breakdown').innerHTML = `
+    <div class="perq-row"><span class="pk">Outstanding balance</span><span class="pv">₹${fmt(bal)}</span></div>
+    <div class="perq-row"><span class="pk">Employer rate charged</span><span class="pv">${empRate}%</span></div>
+    <div class="perq-row"><span class="pk">SBI PLR / market rate</span><span class="pv">${sbiRate}%</span></div>
+    <div class="perq-row"><span class="pk">Concessional rate difference</span><span class="pv">${diff.toFixed(2)}%</span></div>
+    <div class="perq-row"><span class="pk">Annual perquisite (bal × diff%)</span><span class="pv">₹${fmtR(perqVal)}</span></div>
+    <div class="perq-row"><span class="pk">Tax slab</span><span class="pv">${taxSlab}%</span></div>
+  `;
+  document.getElementById('pq-result').style.display = 'block';
+  document.getElementById('pq-result').className = 'perq-result res-anim';
+}
+
+function calcSalary() {
+  const basic = parseFloat(document.getElementById('sal-basic').value);
+  const daPct = parseFloat(document.getElementById('sal-da').value)||0;
+  const hraPct = parseFloat(document.getElementById('sal-hra').value)||9;
+  const spl = parseFloat(document.getElementById('sal-spl').value)||0;
+  const bip = parseFloat(document.getElementById('sal-bip').value)||0;
+  if (!basic||basic<=0) { alert('Enter valid basic pay.'); return; }
+  function buildSalTable(b) {
+    const da = b * daPct / 100;
+    const hra = b * hraPct / 100;
+    const gross = b + da + hra + spl;
+    return { b, da, hra, spl, gross };
+  }
+  const cur = buildSalTable(basic);
+  const tbody = document.getElementById('sal-tbody'); tbody.innerHTML='';
+  [['Basic pay',cur.b],['DA ('+daPct+'%)',cur.da],['HRA ('+hraPct+'%)',cur.hra],['Special allowance',cur.spl],['Gross',cur.gross]].forEach(([k,v],i) => {
+    const tr = document.createElement('tr');
+    if (i===4) tr.style.fontWeight='500';
+    tr.innerHTML=`<td style="color:var(--text2)">${k}</td><td class="tr" style="font-family:var(--mono);color:${i===4?'var(--teal)':'var(--text)'}">${fmtR(v)}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('sal-gross').textContent = '₹'+fmtR(cur.gross);
+  document.getElementById('sal-bipartite-label').textContent = '12th bipartite';
+  if (bip > 0) {
+    const newBasic = basic * (1 + bip/100);
+    const nw = buildSalTable(newBasic);
+    const tbody13 = document.getElementById('sal-tbody-13'); tbody13.innerHTML='';
+    [['Revised basic (+'+bip+'%)',nw.b],['DA ('+daPct+'%)',nw.da],['HRA ('+hraPct+'%)',nw.hra],['Special allowance',nw.spl],['Revised gross',nw.gross]].forEach(([k,v],i) => {
+      const tr = document.createElement('tr'); if(i===4) tr.style.fontWeight='500';
+      tr.innerHTML=`<td style="color:var(--text2)">${k}</td><td class="tr" style="font-family:var(--mono);color:${i===4?'var(--amber)':'var(--text)'}">${fmtR(v)}</td>`;
+      tbody13.appendChild(tr);
+    });
+    document.getElementById('sal-gross-13').textContent = '₹'+fmtR(nw.gross);
+    document.getElementById('sal-13th-card').style.display = 'block';
+  } else { document.getElementById('sal-13th-card').style.display='none'; }
+  document.getElementById('sal-result').style.display = 'block';
+  document.getElementById('sal-result').className = 'salary-result res-anim';
+}
+</script>
+</body>
+</html>
