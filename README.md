@@ -43,7 +43,6 @@ Clone the repository:
 ```bash
 git clone https://github.com/your-username/staff-loan-calculator.git
 ```
-
 Open the project folder and run `index.html` in your browser.
 
 ---
