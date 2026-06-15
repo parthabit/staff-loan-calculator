@@ -17,7 +17,6 @@ A simple and responsive web application to calculate staff loan details quickly 
 * Simple financial planning tool
 
 ---
-
 ## 🛠️ Technologies Used
 
 * HTML5
