@@ -7,7 +7,6 @@ A simple and responsive web application to calculate staff loan details quickly 
 🔗 [Staff Loan Calculator](https://staffloancalculator.netlify.app?utm_source=chatgpt.com)
 
 ---
-
 ## 📌 Features
 
 * Calculate loan EMI instantly
